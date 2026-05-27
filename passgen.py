@@ -11,7 +11,7 @@ def gen_zeros(file_path) -> None:
     try:
         amount = int(input("Amount of zeros: "))
     except ValueError:
-        print("You must enter integer number!")
+        print("You must enter an integer value!")
         return
     if confirmation():
         with open(file_path, "w") as f:
@@ -23,11 +23,11 @@ def gen_zeros(file_path) -> None:
 
 def gen_numbers(file_path) -> None:
     try:
-        a = int(input("Start count: "))
-        b = int(input("End count: "))
-        n = int(input("Amount of zeros: "))
+        a = int(input("Start range: "))
+        b = int(input("End range: "))
+        n = int(input("Total digits (width): "))
     except ValueError:
-        print("You must enter integer number!")
+        print("You must enter an integer value!")
         return
     if confirmation():
         with open(file_path, "w") as f:
@@ -41,15 +41,15 @@ def gen_numbers(file_path) -> None:
 if __name__ == "__main__":
     try:
         location = input("Location of the output file: ")
-        choice = input(
-            "What do you want?\n[1] Fill file with zeros\n[2] Generate number passwords\n[1/2]: "
+        option = input(
+            "Select an option\n[1] Fill file with zeros\n[2] Generate number passwords\n[1/2]: "
         )
-        if choice == "1":
+        if option == "1":
             gen_zeros(location)
-        elif choice == "2":
+        elif option == "2":
             gen_numbers(location)
         else:
-            print("Incorrect choice!!!")
+            print("Incorrect option!!!")
     except KeyboardInterrupt:
         print("\nCancelled by user")
     except Exception as e:
