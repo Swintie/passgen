@@ -1,6 +1,6 @@
-def confirmation():
-    confirm = input("Do you want to continue? [Y/n]: ")
-    if confirm == "y" or confirm == "Y":
+def confirmation() -> bool:
+    confirm = input("Do you want to continue? [Y/n]: ").lower()
+    if confirm in ("yes", "y", ""):
         print("Press (Ctrl + C) to exit")
         return True
     else:
