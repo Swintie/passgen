@@ -1,4 +1,4 @@
-from random import choice
+from secrets import choice
 from string import ascii_lowercase, ascii_uppercase, digits, punctuation
 
 
@@ -16,6 +16,7 @@ dictionaries = {
     "2": ascii_uppercase,
     "3": digits,
     "4": punctuation,
+    "5": ascii_lowercase + ascii_uppercase + punctuation + digits,
 }
 
 
@@ -26,6 +27,7 @@ def select_dict() -> str:
         f"[2] {ascii_uppercase}\n"
         f"[3] {digits}\n"
         f"[4] {punctuation}\n"
+        f"[5] ALL\n"
         f"Your choice: "
     )
     return selection
@@ -33,17 +35,29 @@ def select_dict() -> str:
 
 def gen_ascii_pass() -> None:  # This generator isn't ideal but it's working at least
     try:
-        length = int(input("Password length: "))
+        length = int(
+            input("Password length: ")
+        )  # I should think how to fix this "feature"
+        sel = select_dict()
+        if len(sel) > length:
+            print(
+                "Password length cannot be shorter than the number of selected dictionaries!"
+            )
+            return
     except ValueError:
-        print("You must enter an integer value")
+        print("You must enter an integer value!")
         return
-    work_dir = "".join(dictionaries[i] for i in select_dict() if i in dictionaries)
+    work_dir = "".join(dictionaries[i] for i in sel if i in dictionaries)
     if not work_dir:
         print("Dictionary is empty")
         return
     password = ""
-    for i in range(length):
-        password += choice(work_dir)
+    while any(  # Checking if password contains at least one character from each selected dictionary
+        set(password).isdisjoint(dictionaries[i]) for i in sel if i in dictionaries
+    ):
+        password = ""
+        for i in range(length):
+            password += choice(work_dir)
     print(password)
 
 
@@ -53,7 +67,7 @@ def gen_zeros(file_path) -> None:
     except ValueError:
         print("You must enter an integer value!")
         return
-    chunk = 100000000  # It takes around 100MB RAM per writing
+    chunk = 100000000  # It takes around 100MB RAM per writing (You can increase this value if you have more RAM)
     chunks_amount = amount // chunk
     zeros_left = amount % chunk
     if confirmation():
@@ -86,7 +100,7 @@ def gen_numbers(file_path) -> None:
 if __name__ == "__main__":
     try:
         option = input(
-            "Select an option\n[1] Fill file with zeros\n[2] Generate number passwords\n[3] Generate custom password\n: "
+            "Select an option\n[1] Fill file with zeros\n[2] Generate number passwords\n[3] Generate custom password\nOption: "
         )
         if option == "1":
             location = input("Location of the output file: ")
