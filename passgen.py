@@ -19,7 +19,7 @@ dictionaries = {
 }
 
 
-def select_dict():
+def select_dict() -> str:
     selection = input(
         f"Select a dictionary(es):\n"
         f"[1] {ascii_lowercase}\n"
@@ -31,7 +31,7 @@ def select_dict():
     return selection
 
 
-def gen_ascii_pass() -> None:  # This generator is't ideal but it's working at least
+def gen_ascii_pass() -> None:  # This generator isn't ideal but it's working at least
     try:
         length = int(input("Password length: "))
     except ValueError:
@@ -53,9 +53,14 @@ def gen_zeros(file_path) -> None:
     except ValueError:
         print("You must enter an integer value!")
         return
+    chunk = 100000000  # It takes around 100MB RAM per writing
+    chunks_amount = amount // chunk
+    zeros_left = amount % chunk
     if confirmation():
         with open(file_path, "w") as f:
-            f.write("0" * amount)
+            for i in range(chunks_amount):
+                f.write("0" * chunk)
+            f.write("0" * zeros_left)
             print("Success!")
     else:
         print("Aborting!")
@@ -97,4 +102,3 @@ if __name__ == "__main__":
         print("\nCancelled by user")
     except Exception as e:
         print(f"\n{e}")
-        exit()
